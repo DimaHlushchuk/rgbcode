@@ -1,0 +1,33 @@
+version: '2'
+services:
+  rgb_backend:
+    image: avega/website:centos-apache-php7.2
+    environment:
+      URL_1: http://localhost:2401/
+      MYSQL_USER: root
+      MYSQL_PASS: rgb2021
+      MYSQL_HOST: mysql
+      DB_1: rgb_10
+    volumes:
+      - ./wp:/var/www/html/
+    ports:
+      - 2401:80
+    links:
+      - rgb_mysql
+  rgb_mysql:
+    image: mysql:5.6
+    environment:
+      MYSQL_ROOT_PASSWORD: rgb2021
+      MYSQL_DATABASE: rgb_10
+    volumes:
+      - ./docker-data/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+  rgb_pma:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: rgb_mysql
+    ports:
+      - 2474:80
+    links:
+      - rgb_mysql
